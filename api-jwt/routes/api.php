@@ -34,9 +34,13 @@ Route::group([
 Route::group(['middleware' => ['jwt.verify']], function () {
 //productos
     Route::get('productos', 'App\Http\Controllers\ProductoController@index');
+    Route::get('productos/{id}', 'App\Http\Controllers\ProductoController@show');
     Route::post('productos', 'App\Http\Controllers\ProductoController@store');
     Route::put('productos/{id}', 'App\Http\Controllers\ProductoController@update');
     Route::put('productos/desactivar/{id}', 'App\Http\Controllers\ProductoController@deactivate');
     Route::put('productos/activar/{id}', 'App\Http\Controllers\ProductoController@activate');
+
+//clientes
+    Route::get('clientes','App\Http\Controllers\ClienteController@index');
 
 });

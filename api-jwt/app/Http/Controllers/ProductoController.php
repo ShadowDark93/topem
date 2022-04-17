@@ -21,6 +21,28 @@ class ProductoController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Producto  $producto
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request, $id)
+    {
+        $producto = Producto::Find($id);
+        if (isset($producto)) {
+            return response()->json([
+                'message' => 'Producto encontrado!',
+                'producto' => $producto,
+            ], 201);
+        } else {
+            return response()->json([
+                'error' => 'Error, Producto no encontrado!',
+                'error_code' => 400,
+            ], 400);
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreProductoRequest  $request
@@ -85,7 +107,7 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function activate(Request $request)
+    public function activate(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'estado' => 'required|string',
@@ -95,13 +117,20 @@ class ProductoController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $producto = Producto::FindOrFail($request->id);
-        $producto->estado='1';
+        $producto = Producto::Find($id);
+        if (isset($producto)) {
+            $producto->estado = '1';
 
-        return response()->json([
-            'message' => 'Producto activado exitosamente!',
-            'producto' => $producto,
-        ], 201);
+            return response()->json([
+                'message' => 'Producto desactivado exitosamente!',
+                'producto' => $producto,
+            ], 201);
+        } else {
+            return response()->json([
+                'error' => 'Error, Producto no encontrado!',
+                'error_code' => 400,
+            ], 400);
+        }
 
     }
 
@@ -111,7 +140,7 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function deactivate(Request $request)
+    public function deactivate(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'estado' => 'required|string',
@@ -121,13 +150,20 @@ class ProductoController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $producto = Producto::FindOrFail($request->id);
-        $producto->estado='0';
+        $producto = Producto::Find($id);
+        if (isset($producto)) {
+            $producto->estado = '0';
 
-        return response()->json([
-            'message' => 'Producto desactivado exitosamente!',
-            'producto' => $producto,
-        ], 201);
+            return response()->json([
+                'message' => 'Producto desactivado exitosamente!',
+                'producto' => $producto,
+            ], 201);
+        } else {
+            return response()->json([
+                'error' => 'Error, Producto no encontrado!',
+                'error_code' => 400,
+            ], 400);
+        }
 
     }
 }
