@@ -17,7 +17,11 @@ class EmpresaFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'nombre'=> 'Empresa x',
+            'propietario'=>'David',
+            'nit'=>'1234567890',
+            'correo'=>'david@empresax.com',
+            'telefono'=>'123456789'
         ];
     }
 }

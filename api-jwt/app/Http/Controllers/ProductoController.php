@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProductoRequest;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -77,27 +76,36 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Producto $producto)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string',
             'cantidad' => 'required|integer',
             'precio' => 'required|integer',
-            'estado' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $producto = Producto::update(array_merge(
-            $validator->validate()
-        ));
-
-        return response()->json([
-            'message' => 'Usuario creado exitosamente!',
-            'producto' => $producto,
-        ], 201);
+        $producto = Producto::Find($id);
+        if (isset($producto)) {
+            $producto->nombre=$request->get('nombre');
+            $producto->cantidad=$request->get('cantidad');
+            $producto->precio=$request->get('precio');
+            $producto->estado = $request->get('estado');
+            $producto->save();
+            
+            return response()->json([
+                'message' => 'Producto desactivado exitosamente!',
+                'producto' => $producto,
+            ], 201);
+        } else {
+            return response()->json([
+                'error' => 'Error, Producto no encontrado!',
+                'error_code' => 400,
+            ], 400);
+        }
 
     }
 
@@ -107,20 +115,12 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function activate(Request $request, $id)
+    public function activate($id)
     {
-        $validator = Validator::make($request->all(), [
-            'estado' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
         $producto = Producto::Find($id);
         if (isset($producto)) {
             $producto->estado = '1';
-
+            $producto->save();
             return response()->json([
                 'message' => 'Producto desactivado exitosamente!',
                 'producto' => $producto,
@@ -140,19 +140,12 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function deactivate(Request $request, $id)
+    public function deactivate($id)
     {
-        $validator = Validator::make($request->all(), [
-            'estado' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
         $producto = Producto::Find($id);
         if (isset($producto)) {
             $producto->estado = '0';
+            $producto->save();
 
             return response()->json([
                 'message' => 'Producto desactivado exitosamente!',

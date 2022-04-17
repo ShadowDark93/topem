@@ -16,12 +16,13 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->engine = "InnoDB";
             $table->id();
-            $table->string('tipo_cliente');
+            $table->string('tipo_documento');
+            $table->string('documento');
             $table->string('nombres');
             $table->string('apellidos');
             $table->string('correo');
             $table->string('telefono');
-            $table->char('estado',1)->default('1');
+            $table->char('estado',1)->default('1')->nullable();
             $table->timestamps();
         });
     }

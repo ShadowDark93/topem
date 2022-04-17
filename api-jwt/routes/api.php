@@ -42,5 +42,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
 //clientes
     Route::get('clientes','App\Http\Controllers\ClienteController@index');
+    Route::get('clientes/{id}','App\Http\Controllers\ClienteController@show');
+    Route::post('clientes', 'App\Http\Controllers\ClienteController@store');
+    Route::put('clientes/{id}', 'App\Http\Controllers\ClienteController@update');
 
 });

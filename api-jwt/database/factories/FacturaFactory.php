@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Cliente;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Factura>
@@ -17,7 +18,8 @@ class FacturaFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'empresa_id'=>'1',
+            'cliente_id'=> Cliente::factory()
         ];
     }
 }

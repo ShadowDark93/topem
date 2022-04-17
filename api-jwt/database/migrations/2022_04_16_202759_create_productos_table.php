@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->integer('cantidad');
             $table->double('precio');
-            $table->char('estado',1)->default('1');
+            $table->char('estado',1)->default('1')->nullable();
             $table->timestamps();
         });
     }
