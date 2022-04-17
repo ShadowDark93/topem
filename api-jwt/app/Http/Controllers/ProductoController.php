@@ -21,16 +21,6 @@ class ProductoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreProductoRequest  $request
@@ -56,28 +46,6 @@ class ProductoController extends Controller
             'message' => 'Usuario creado exitosamente!',
             'producto' => $producto,
         ], 201);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Producto  $producto
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Producto $producto)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Producto  $producto
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Producto $producto)
-    {
-        //
     }
 
     /**
@@ -112,13 +80,54 @@ class ProductoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Activate the specified resource from storage.
      *
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Producto $producto)
+    public function activate(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'estado' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $producto = Producto::FindOrFail($request->id);
+        $producto->estado='1';
+
+        return response()->json([
+            'message' => 'Producto activado exitosamente!',
+            'producto' => $producto,
+        ], 201);
+
+    }
+
+    /**
+     * Desactivar the specified resource from storage.
+     *
+     * @param  \App\Models\Producto  $producto
+     * @return \Illuminate\Http\Response
+     */
+    public function deactivate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'estado' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $producto = Producto::FindOrFail($request->id);
+        $producto->estado='0';
+
+        return response()->json([
+            'message' => 'Producto desactivado exitosamente!',
+            'producto' => $producto,
+        ], 201);
+
     }
 }
