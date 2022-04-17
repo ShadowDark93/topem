@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('empresa_id')->references('id')->on('empresas');
             $table->foreignId('cliente_id')->references('id')->on('clientes');
+            $table->double('total_factura')->nullable();
             $table->timestamps();
         });
     }

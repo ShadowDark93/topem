@@ -19,7 +19,8 @@ class FacturaFactory extends Factory
     {
         return [
             'empresa_id'=>'1',
-            'cliente_id'=> Cliente::factory()
+            'cliente_id'=> Cliente::factory(),
+            'total_factura'=>$this->faker->numberBetween($min = 100, $max = 100000),
         ];
     }
 }

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Factura;
-use App\Http\Requests\StoreFacturaRequest;
-use App\Http\Requests\UpdateFacturaRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class FacturaController extends Controller
 {
@@ -15,17 +16,13 @@ class FacturaController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $facturas = DB::table('facturas')
+            ->join('clientes', 'clientes.id', '=', 'facturas.cliente_id')
+            ->join('empresas', 'empresas.id', '=', 'facturas.empresa_id')
+            ->select('facturas.id', 'empresas.nit', 'empresas.nombre', 'clientes.tipo_documento', 'clientes.documento', 'facturas.total_factura', 'facturas.created_at', 'facturas.updated_at')
+            ->get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $facturas;
     }
 
     /**
@@ -34,9 +31,30 @@ class FacturaController extends Controller
      * @param  \App\Http\Requests\StoreFacturaRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreFacturaRequest $request)
+    public function store(Request $request)
     {
-        //
+        $factura = Validator::make($request->all(), [
+            'empresa_id' => 'required|integer',
+            'cliente_id' => 'required|integer',
+            'total_factura' => 'required|numeric',
+        ]);
+
+        if ($factura->fails()) {
+            return response()->json([
+                'error' => $factura->errors()->toJson(),
+                'error_code' => 400,
+            ], 400);
+        }
+
+        $factura = Factura::create(array_merge(
+            $factura->validate()
+        ));
+
+        return response()->json([
+            'message' => 'Factura creada exitosamente!',
+            'factura' => $factura,
+        ], 201);
+
     }
 
     /**
@@ -45,20 +63,27 @@ class FacturaController extends Controller
      * @param  \App\Models\Factura  $factura
      * @return \Illuminate\Http\Response
      */
-    public function show(Factura $factura)
+    public function show($id)
     {
-        //
-    }
+        $factura = DB::table('facturas')
+            ->join('clientes', 'clientes.id', '=', 'facturas.cliente_id')
+            ->join('empresas', 'empresas.id', '=', 'facturas.empresa_id')
+            ->select('facturas.id', 'empresas.nit', 'empresas.nombre', 'clientes.tipo_documento', 'clientes.documento', 'facturas.total_factura', 'facturas.created_at', 'facturas.updated_at')
+            ->where('facturas.id', '=', $id)
+            ->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Factura  $factura
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Factura $factura)
-    {
-        //
+        if ($factura) {
+            return response()->json([
+                'message' => 'Factura encontrada!',
+                'factura' => $factura,
+            ], 201);
+        } else {
+            return response()->json([
+                'error' => 'Error, Factura no encontrada!',
+                'error_code' => 400,
+            ], 400);
+        }
+
     }
 
     /**
@@ -68,19 +93,34 @@ class FacturaController extends Controller
      * @param  \App\Models\Factura  $factura
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateFacturaRequest $request, Factura $factura)
+    public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'cliente_id' => 'required|string',
+            'total_factura' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $factura = Factura::Find($id);
+        if (isset($factura)) {
+            $factura->cliente_id = $request->get('cliente_id');
+            $factura->total_factura = $request->get('total_factura');
+            $factura->save();
+
+            return response()->json([
+                'message' => 'Factura modificada exitosamente!',
+                'factura' => $factura,
+            ], 201);
+        } else {
+            return response()->json([
+                'error' => 'Error, Factura no encontrado!',
+                'error_code' => 400,
+            ], 400);
+        }
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Factura  $factura
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Factura $factura)
-    {
-        //
-    }
 }

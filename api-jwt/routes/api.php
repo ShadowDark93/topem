@@ -46,4 +46,10 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('clientes', 'App\Http\Controllers\ClienteController@store');
     Route::put('clientes/{id}', 'App\Http\Controllers\ClienteController@update');
 
+//facturas
+    Route::get('facturas','App\Http\Controllers\FacturaController@index');
+    Route::get('facturas/{id}','App\Http\Controllers\FacturaController@show');
+    Route::post('facturas', 'App\Http\Controllers\FacturaController@store');
+    Route::put('facturas/{id}', 'App\Http\Controllers\FacturaController@update');
+
 });

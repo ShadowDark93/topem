@@ -12,5 +12,6 @@ class Factura extends Model
     protected $fillable=[
         'empresa_id',
         'cliente_id',
+        'total_factura',
     ];
 }

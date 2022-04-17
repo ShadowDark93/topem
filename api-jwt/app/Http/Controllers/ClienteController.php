@@ -48,7 +48,7 @@ class ClienteController extends Controller
         ));
 
         return response()->json([
-            'message' => 'Usuario creado exitosamente!',
+            'message' => 'Cliente creado exitosamente!',
             'cliente' => $cliente,
         ], 201);
 
@@ -111,7 +111,7 @@ class ClienteController extends Controller
             $cliente->save();
 
             return response()->json([
-                'message' => 'Producto desactivado exitosamente!',
+                'message' => 'Cliente ha sido actualizado exitosamente!',
                 'cliente' => $cliente,
             ], 201);
         } else {
