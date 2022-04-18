@@ -16,7 +16,7 @@
                   <form action class="form" @submit.prevent="login">
                     <div class="form-group">
                       <input
-                        :model="form.email"
+                        v-model="form.email"
                         type="email"
                         class="form-control form-control-user"
                         id="exampleInputEmail"
@@ -27,7 +27,7 @@
 
                     <div class="form-group">
                       <input
-                        :model="form.password"
+                        v-model="form.password"
                         type="password"
                         class="form-control form-control-user"
                         id="exampleInputPassword"
@@ -56,7 +56,7 @@
 
 <script>
 import auth from "@/logic/auth";
-import Swal from "sweetalert2";
+/* import Swal from "sweetalert2"; */
 
 export default {
   name: "LoginComponent",
@@ -74,15 +74,17 @@ export default {
 
   methods: {
     async login() {
-      try {
+      /* try { */
         
-        await auth.login(this.form.email, this.form.password);
+        await auth.login(this.form).then((res)=>{
+          console.log(res)
+        });
 
         /* const user = {
           email: this.email,
         };
         auth.setUserLogged(user);
-        this.$router.push("/"); */
+        this.$router.push("/"); 
       } catch (error) {
         console.log(error);
         this.loginError = true;
@@ -92,7 +94,7 @@ export default {
           text: "Error, valide los datos ingresados!",
           timer: 2500
         });
-      }
+      }*/
     },
   },
 };
