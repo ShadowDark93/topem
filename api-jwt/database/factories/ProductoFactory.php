@@ -18,8 +18,9 @@ class ProductoFactory extends Factory
     {
         return [
             'nombre' => $this->faker->name,
-            'cantidad' => $this->faker->numberBetween($min = 1, $max = 900),
+            'stock' => $this->faker->numberBetween($min = 1, $max = 900),
             'precio' => $this->faker->numberBetween($min = 100, $max = 100000),
+            'iva' => $this->faker->randomElement($array = array('0.19', '0')),
             'estado'=>'1',
         ];
     }

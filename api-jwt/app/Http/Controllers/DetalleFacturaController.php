@@ -3,29 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetalleFactura;
-use App\Http\Requests\StoreDetalleFacturaRequest;
-use App\Http\Requests\UpdateDetalleFacturaRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 
 class DetalleFacturaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the specified resource.
      *
+     * @param  \App\Models\DetalleFactura  $detalleFactura
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $detalle = DB::table('detalle_facturas')
+                    ->join('productos','productos.id','=','detalle_facturas.producto_id')
+                    ->select('detalle_facturas.factura_id','detalle_facturas.producto_id','productos.nombre','productos.precio','productos.stock','productos.iva','detalle_facturas.valor_unitario','detalle_facturas.valor_total')
+                    ->where('factura_id','=',$id)
+                    ->get();
+        if ($detalle->count()>0) {
+            return response()->json([
+                'message' => 'Detalle de Factura encontrado!',
+                'factura' => $detalle,
+            ], 200);
+        } else {
+            return response()->json([
+                'error' => 'Error, Factura no encontrada!',
+                'error_code' => 400,
+            ], 400);
+        }
     }
 
     /**
@@ -34,31 +42,32 @@ class DetalleFacturaController extends Controller
      * @param  \App\Http\Requests\StoreDetalleFacturaRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreDetalleFacturaRequest $request)
+    public function store(Request $request)
     {
-        //
-    }
+        $detalle = Validator::make($request->all(), [
+            'factura_id' => 'required|integer',
+            'producto_id' => 'required|integer',
+            'cantidad' => 'required|integer',
+            'valor_unitario' => 'required',
+            'valor_total' => 'required',
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\DetalleFactura  $detalleFactura
-     * @return \Illuminate\Http\Response
-     */
-    public function show(DetalleFactura $detalleFactura)
-    {
-        //
-    }
+        if ($detalle->fails()) {
+            return response()->json([
+                'error' => $detalle->errors()->toJson(),
+                'error_code' => 400,
+            ], 400);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\DetalleFactura  $detalleFactura
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(DetalleFactura $detalleFactura)
-    {
-        //
+        $detalle = DetalleFactura::create(array_merge(
+            $detalle->validate()
+        ));
+
+        return response()->json([
+            'message' => 'Detalle de Factura creado exitosamente!',
+            'detalle' => $detalle,
+        ], 201);
+
     }
 
     /**
@@ -73,14 +82,4 @@ class DetalleFacturaController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\DetalleFactura  $detalleFactura
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(DetalleFactura $detalleFactura)
-    {
-        //
-    }
 }

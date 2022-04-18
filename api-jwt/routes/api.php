@@ -49,7 +49,11 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 //facturas
     Route::get('facturas','App\Http\Controllers\FacturaController@index');
     Route::get('facturas/{id}','App\Http\Controllers\FacturaController@show');
+    Route::get('facturas/documento/{documento}', 'App\Http\Controllers\FacturaController@searchByCliente');
     Route::post('facturas', 'App\Http\Controllers\FacturaController@store');
     Route::put('facturas/{id}', 'App\Http\Controllers\FacturaController@update');
 
+//Detalle Factura
+    Route::get('detallefactura/{id}','App\Http\Controllers\DetalleFacturaController@show');
+    Route::post('detallefactura','App\Http\Controllers\DetalleFacturaController@store');
 });

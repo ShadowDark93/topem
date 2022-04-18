@@ -17,8 +17,9 @@ return new class extends Migration
             $table->engine = "InnoDB";
             $table->id();
             $table->string('nombre');
-            $table->integer('cantidad');
+            $table->integer('stock');
             $table->double('precio');
+            $table->double('iva')->default(0.19);
             $table->char('estado',1)->default('1')->nullable();
             $table->timestamps();
         });

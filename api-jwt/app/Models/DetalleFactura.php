@@ -13,8 +13,8 @@ class DetalleFactura extends Model
         'factura_id',
         'producto_id',
         'cantidad',
-        'iva',
         'valor_unitario',
         'valor_total',
+        'estado'
     ];
 }

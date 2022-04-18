@@ -49,18 +49,19 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|unique:productos',
-            'cantidad' => 'required|integer',
-            'precio' => 'required|integer',
+        $producto = Validator::make($request->all(), [
+            'nombre' => 'required|string',
+            'stock' => 'required',
+            'precio' => 'required',
+            'iva' => 'required'
         ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+        
+        if ($producto->fails()) {
+            return response()->json($producto->errors()->toJson(), 400);
         }
 
         $producto = Producto::create(array_merge(
-            $validator->validate()
+            $producto->validate()
         ));
 
         return response()->json([
@@ -80,7 +81,8 @@ class ProductoController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string',
-            'cantidad' => 'required|integer',
+            'stock' => 'required|integer',
+            'iva' => 'required',
             'precio' => 'required|integer',
         ]);
 
@@ -91,8 +93,9 @@ class ProductoController extends Controller
         $producto = Producto::Find($id);
         if (isset($producto)) {
             $producto->nombre=$request->get('nombre');
-            $producto->cantidad=$request->get('cantidad');
+            $producto->stock=$request->get('stock');
             $producto->precio=$request->get('precio');
+            $producto->iva=$request->get('iva');
             $producto->estado = $request->get('estado');
             $producto->save();
             

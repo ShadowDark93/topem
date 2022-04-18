@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Factura;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -71,6 +72,37 @@ class FacturaController extends Controller
             ->select('facturas.id', 'empresas.nit', 'empresas.nombre', 'clientes.tipo_documento', 'clientes.documento', 'facturas.total_factura', 'facturas.created_at', 'facturas.updated_at')
             ->where('facturas.id', '=', $id)
             ->first();
+
+        if ($factura) {
+            return response()->json([
+                'message' => 'Factura encontrada!',
+                'factura' => $factura,
+            ], 201);
+        } else {
+            return response()->json([
+                'error' => 'Error, Factura no encontrada!',
+                'error_code' => 400,
+            ], 400);
+        }
+
+    }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Factura  $factura
+     * @return \Illuminate\Http\Response
+     */
+    public function searchByCliente($documento)
+    {
+        $cliente=Cliente::where('documento',$documento)->first();
+        
+        $factura = DB::table('facturas')
+            ->join('clientes', 'clientes.id', '=', 'facturas.cliente_id')
+            ->join('empresas', 'empresas.id', '=', 'facturas.empresa_id')
+            ->select('facturas.id', 'empresas.nit', 'empresas.nombre', 'clientes.tipo_documento', 'clientes.documento', 'facturas.total_factura', 'facturas.created_at', 'facturas.updated_at')
+            ->where('clientes.id', '=', $cliente->id)
+            ->get();
 
         if ($factura) {
             return response()->json([

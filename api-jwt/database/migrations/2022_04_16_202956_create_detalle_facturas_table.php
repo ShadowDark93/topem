@@ -19,9 +19,9 @@ return new class extends Migration
             $table->foreignId('factura_id')->references('id')->on('facturas');
             $table->foreignId('producto_id')->references('id')->on('productos');
             $table->integer('cantidad');
-            $table->char('iva',1)->default('0');
             $table->double('valor_unitario');
             $table->double('valor_total');
+            $table->char('estado',1)->default('1')->nullable();
             $table->timestamps();
         });
     }
