@@ -19,20 +19,9 @@ export default {
             .then(response => {
                 if (response.data) {
                     localStorage.setItem('jwt', response.data.access_token);
-                    console.log(this.authHeader());
                 }
                 return response.data;
             });
-    },
-
-    profile() {
-        return axios.post(ENDPOINT_PATH + 'auth/profile', { headers: this.authHeader() }).then((response) => {
-            console.log(response);
-        })
-    },
-
-    logout() {
-        localStorage.removeItem('jwt');
     },
 
     authHeader() {
@@ -43,11 +32,20 @@ export default {
         };
     },
 
+    profile() {
+        return axios.post(ENDPOINT_PATH + 'auth/profile', { headers: this.authHeader() }).
+        then((response) => {
+            console.log(response);
+        })
+    },
+
+    logout() {
+        localStorage.removeItem('jwt');
+    },
+
     getClientes() {
-        axios.get(ENDPOINT_PATH + 'clientes', {
+        return axios.get(ENDPOINT_PATH + 'clientes', {
             headers: this.authHeader()
-        }).then((res) => {
-            return res;
         })
 
     }

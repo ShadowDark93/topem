@@ -84,10 +84,9 @@ export default {
       return this.loginState=state
     },
     async login() {
-      await auth
-        .login(this.form)
-        .then(() => {
-          this.$router.push("/dash");
+      await auth.login(this.form)
+        .then(()=>{
+          this.$router.push("/dash")
         })
         .catch(() => {
           Swal.fire({

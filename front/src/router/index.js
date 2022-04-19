@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import DashView from '@/views/PrincipalView.vue'
-import ClientesIndexView from '@/views/ClientesIndexView'
+/* import ClientesIndexView from '@/views/ClientesIndexView' */
 import CrearCliente from '@/components/clientes/create.vue'
 
 
@@ -21,7 +21,9 @@ const routes = [{
     },
     {
         path: "/clientes",
-        component: ClientesIndexView
+        name:'clientes',
+        /* component: ClientesIndexView */
+        component: () => import(/* webpackChunkName: "about" */ '../views/ClientesIndexView.vue')
     },
     {
         path: "/clientes/create",

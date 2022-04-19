@@ -1,23 +1,22 @@
 <template>
+
   <ClientesComponent />
+
+<dash/>
+  
 </template>
 
 <script>
 import ClientesComponent from "@/components/clientes/Clientes.vue";
-/* import auth from "@/logic/auth"; */
+import dash from '@/components/Dashboard.vue'
 
 export default {
   components: {
     ClientesComponent,
+    dash,
   },
   
-  methods: {
-    /* async getClientes() {
-      await auth.getCliente().then((res) => {
-        console.log(res);
-      });
-    }, */
-  },
+  methods: {  },
 };
 </script>
 
