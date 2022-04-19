@@ -56,7 +56,7 @@
 
 <script>
 import auth from "@/logic/auth";
-/* import Swal from "sweetalert2"; */
+import Swal from "sweetalert2";
 
 export default {
   name: "LoginComponent",
@@ -67,34 +67,26 @@ export default {
         email: "",
         password: "",
       },
-      loginError: false,
-      info: "",
+      logued: false,
     };
   },
-
+  mounted() {
+    auth.logout();
+  },
   methods: {
     async login() {
-      /* try { */
-        
-        await auth.login(this.form).then((res)=>{
-          console.log(res)
-        });
+      await auth.login(this.form).then((res)=>{
+        console.log(res);
 
-        /* const user = {
-          email: this.email,
-        };
-        auth.setUserLogged(user);
-        this.$router.push("/"); 
-      } catch (error) {
-        console.log(error);
-        this.loginError = true;
+      }).catch(()=>{
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Error, valide los datos ingresados!",
-          timer: 2500
+          text: "Error, por favor valida tus credenciales!",
+          showConfirmButton: false,
+          timer: 2500,
         });
-      }*/
+      });
     },
   },
 };
