@@ -62,7 +62,6 @@
 <script>
 import auth from "@/logic/auth";
 import Swal from "sweetalert2";
-import store from '@/store/index';
 
 export default {
   name: "LoginComponent",
@@ -88,7 +87,6 @@ export default {
       await auth
         .login(this.form)
         .then(() => {
-          store.state.loginState=true;
           this.$router.push("/dash");
         })
         .catch(() => {
@@ -101,6 +99,12 @@ export default {
           });
         });
     },
+    async getProfile(){
+      await auth.profile().then((res)=>{
+        console.log(res);
+      })      
+    },
+
   },
 };
 </script>

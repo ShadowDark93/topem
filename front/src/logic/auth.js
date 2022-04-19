@@ -2,12 +2,12 @@ import axios from "axios";
 
 
 const ENDPOINT_PATH = "https://topem.sintraunipricol.com.co/public/api/";
-let logued = false;
+
 export default {
 
     register(name, email, password, password_confirmation) {
         const user = { name, email, password, password_confirmation };
-        return axios.post(ENDPOINT_PATH + "/autn/regiser", user);
+        return axios.post(ENDPOINT_PATH + "autn/regiser", user);
     },
 
     login(user) {
@@ -19,13 +19,36 @@ export default {
             .then(response => {
                 if (response.data) {
                     localStorage.setItem('jwt', response.data.access_token);
-                    logued = true;
+                    console.log(this.authHeader());
                 }
                 return response.data;
             });
     },
-    logued,
+
+    profile() {
+        return axios.post(ENDPOINT_PATH + 'auth/profile', { headers: this.authHeader() }).then((response) => {
+            console.log(response);
+        })
+    },
+
     logout() {
         localStorage.removeItem('jwt');
+    },
+
+    authHeader() {
+        let tk = localStorage.getItem('jwt');
+        return {
+            'Acept': 'application/json',
+            'Authorization': 'Bearer ' + tk
+        };
+    },
+
+    getClientes() {
+        axios.get(ENDPOINT_PATH + 'clientes', {
+            headers: this.authHeader()
+        }).then((res) => {
+            return res;
+        })
+
     }
 };
