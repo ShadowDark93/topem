@@ -35,14 +35,19 @@
                       />
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-user btn-block"
+                    >
                       Ingresar
                     </button>
                   </form>
                   <hr />
 
                   <div class="text-center">
-                    <router-link class="small" to="/register">Crear Cuenta</router-link>
+                    <router-link class="small" to="/register"
+                      >Crear Cuenta</router-link
+                    >
                   </div>
                 </div>
               </div>
@@ -57,6 +62,7 @@
 <script>
 import auth from "@/logic/auth";
 import Swal from "sweetalert2";
+import store from '@/store/index';
 
 export default {
   name: "LoginComponent",
@@ -67,26 +73,33 @@ export default {
         email: "",
         password: "",
       },
-      logued: false,
+      loginState:false,
     };
   },
   mounted() {
     auth.logout();
   },
-  methods: {
-    async login() {
-      await auth.login(this.form).then((res)=>{
-        console.log(res);
 
-      }).catch(()=>{
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Error, por favor valida tus credenciales!",
-          showConfirmButton: false,
-          timer: 2500,
+  methods: {
+    changeLoginState(state){
+      return this.loginState=state
+    },
+    async login() {
+      await auth
+        .login(this.form)
+        .then(() => {
+          store.state.loginState=true;
+          this.$router.push("/dash");
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Error, por favor valida tus credenciales!",
+            showConfirmButton: false,
+            timer: 2500,
+          });
         });
-      });
     },
   },
 };

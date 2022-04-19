@@ -1,11 +1,40 @@
 <template >
-  <nav>
-    <router-link to="/">Login</router-link> |
-    <router-link to="/register">Registro</router-link> | 
-    <router-link to="/dashboard">Dashboard</router-link>
-  </nav>
-  <router-view/>
+  <div class="div">
+    <nav v-if="validate">
+      <router-link to="/">Login</router-link> |
+      <router-link to="/register">Registro</router-link>
+    </nav>
+    <router-view />
+  </div>
 </template>
+
+<script>
+export default {
+  setup() {},
+  data() {
+    return {
+      validate: false,
+    };
+  },
+  updated() {
+    this.statusLogin();
+  },
+  methods: {
+    changeLogin(state) {
+      if (state == true) {
+        this.validate = true;
+      } else {
+        this.validate = false;
+      }
+      console.log(this.validate);
+    },
+    statusLogin() {
+      console.log(this.validate);
+    },
+  },
+};
+</script>
+
 
 <style>
 #app {
